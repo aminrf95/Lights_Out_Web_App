@@ -131,5 +131,5 @@ function newGame() {
 }
 
 //Main script
-initializeGame(3,3);
+initializeGame(3,false);
 //End main script
