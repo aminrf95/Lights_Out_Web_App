@@ -55,26 +55,26 @@ class Light {
 }
 
 //Creates a 3x3 grid of lights and registers all neighbors
-function makeGrid(numRows, numCols) {
+function makeGrid(size) {
     //Initialize the grid with lights
     let grid = [];
-    for(let i = 0; i < numRows; i++) {
+    for(let i = 0; i < size; i++) {
         let row = [];
-        for(let j = 0; j < numCols; j++) {
+        for(let j = 0; j < size; j++) {
             let gridLight = new Light();
             row.push(gridLight);
         }
         grid.push(row);
     }
     //Register neighbors for each light
-    for(let i = 0; i < numRows; i++) {
-        for(let j = 0; j < numCols; j++) {
+    for(let i = 0; i < size; i++) {
+        for(let j = 0; j < size; j++) {
             let gridLight = grid[i][j];
             //First check for valid neighbor index, then register neighbor
             if(i-1 >= 0) {gridLight.neighbors.push(grid[i-1][j]);}
-            if(i+1 < numRows) {gridLight.neighbors.push(grid[i+1][j]);}
+            if(i+1 < size) {gridLight.neighbors.push(grid[i+1][j]);}
             if(j-1 >= 0) {gridLight.neighbors.push(grid[i][j-1]);}
-            if(j+1 < numCols) {gridLight.neighbors.push(grid[i][j+1]);}
+            if(j+1 < size) {gridLight.neighbors.push(grid[i][j+1]);}
         }
     }
     return grid;
@@ -82,7 +82,7 @@ function makeGrid(numRows, numCols) {
 
 //Initializes a new game with a specified grid size,
 //and embeds it into lights_out_view.html
-function initializeGame(numRows, numCols, random) {
+function initializeGame(size, random) {
     //Keep track of lights on
     let lightOnCount = 0;
 
@@ -91,17 +91,17 @@ function initializeGame(numRows, numCols, random) {
 
     let moveTextDiv = document.getElementById("gameMessage")
     moveTextDiv.appendChild(Light.moveText);
-    let grid = makeGrid(numRows, numCols);
+    let grid = makeGrid(size);
     let gridContainer = document.getElementById("gridContainer");
     //Remove any children
     while(gridContainer.firstChild) {
         gridContainer.removeChild(gridContainer.firstChild);
     }
 
-    for(let i = 0; i < numRows; i++) {
+    for(let i = 0; i < size; i++) {
         let row = document.createElement("div");
         row.className = "row";
-        for(let j = 0; j < numCols; j++) {
+        for(let j = 0; j < size; j++) {
             //If randomized, we give a chance for this light to be off
             //Only increment lightsRemaining for lights that are kept lit.
             if(random && (Math.random() < 0.5)) {
@@ -116,8 +116,8 @@ function initializeGame(numRows, numCols, random) {
     }
     //If by chance all lights are off, pick a random one and turn it on.
     if(lightOnCount == 0) {
-        let i = Math.floor(Math.random() * numRows);
-        let j = Math.floor(Math.random() * numCols);
+        let i = Math.floor(Math.random() * size);
+        let j = Math.floor(Math.random() * size);
         grid[i][j].switchState();
         lightOnCount++;
     }
@@ -125,10 +125,9 @@ function initializeGame(numRows, numCols, random) {
 }
 
 function newGame() {
-    let numRows = document.getElementById("rowSelect").value;
-    let numCols = document.getElementById("columnSelect").value;
+    let size = document.getElementById("sizeSelect").value;
     let random = document.getElementById("randomOption").checked;
-    initializeGame(numRows,numCols,random);
+    initializeGame(size,random);
 }
 
 //Main script
