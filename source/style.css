@@ -1,0 +1,38 @@
+body, html {
+    height: 100%;
+}
+
+main {
+    display: box;
+    justify-content: center;
+    height: 100%;
+}
+
+h1 {
+    text-align: center;
+}
+
+.row {
+    display: flex;
+}
+
+#gamePane {
+    display: flex;
+}
+
+#gridContainer {
+    margin: auto;
+}
+
+#gameControls {
+    display: flex;
+    justify-content: center;
+}
+
+#gameControls .control {
+    margin: 1rem;
+}
+
+#gameMessage {
+    text-align: center;
+}
