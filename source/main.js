@@ -82,10 +82,13 @@ function makeGrid(numRows, numCols) {
 
 //Initializes a new game with a specified grid size,
 //and embeds it into lights_out_view.html
-function initializeGame(numRows, numCols) {
+function initializeGame(numRows, numCols, random) {
+    //Keep track of lights on
+    let lightOnCount = 0;
+
     Light.moveCount = 0;
     Light.moveText.nodeValue = "Moves: " + Light.moveCount;
-    Light.lightsRemaining = numRows * numCols;
+
     let moveTextDiv = document.getElementById("gameMessage")
     moveTextDiv.appendChild(Light.moveText);
     let grid = makeGrid(numRows, numCols);
@@ -99,17 +102,33 @@ function initializeGame(numRows, numCols) {
         let row = document.createElement("div");
         row.className = "row";
         for(let j = 0; j < numCols; j++) {
+            //If randomized, we give a chance for this light to be off
+            //Only increment lightsRemaining for lights that are kept lit.
+            if(random && (Math.random() < 0.5)) {
+                grid[i][j].switchState();
+            }
+            else {
+                lightOnCount++;
+            }
             row.appendChild(grid[i][j].box);
         }
         gridContainer.appendChild(row);
     }
-    return gridContainer;
+    //If by chance all lights are off, pick a random one and turn it on.
+    if(lightOnCount == 0) {
+        let i = Math.floor(Math.random() * numRows);
+        let j = Math.floor(Math.random() * numCols);
+        grid[i][j].switchState();
+        lightOnCount++;
+    }
+    Light.lightsRemaining = lightOnCount;
 }
 
 function newGame() {
     let numRows = document.getElementById("rowSelect").value;
     let numCols = document.getElementById("columnSelect").value;
-    initializeGame(numRows,numCols);
+    let random = document.getElementById("randomOption").checked;
+    initializeGame(numRows,numCols,random);
 }
 
 //Main script
